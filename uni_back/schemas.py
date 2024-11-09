@@ -9,6 +9,8 @@ class UserSchema(BaseModel):
     name: str
     email: EmailStr
     password: str
+    cpf: str
+    phone_number: str
 
 
 class UserPublic(BaseModel):

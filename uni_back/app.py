@@ -28,7 +28,13 @@ def create_user(user: UserSchema, session: Session = Depends(get_session)):
                 detail='Email already exists',
             )
 
-    db_user = User(name=user.name, password=user.password, email=user.email)
+    db_user = User(
+        name=user.name,
+        password=user.password,
+        email=user.email,
+        cpf=user.cpf,
+        phone_number=user.phone_number,
+    )
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
