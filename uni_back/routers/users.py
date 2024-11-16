@@ -95,4 +95,4 @@ def delete_user(user_id: int, session: T_Session, current_user: T_CurrentUser):
     session.delete(current_user)
     session.commit()
 
-    return {'message': 'User deleted'}
+    return {'message': 'User deletado'}
