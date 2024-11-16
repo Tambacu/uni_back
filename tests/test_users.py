@@ -7,15 +7,17 @@ def test_create_user(client):
     response = client.post(
         '/users/',
         json={
-            'username': 'alice',
-            'email': 'alice@example.com',
-            'password': 'secret',
+            'name': 'Tambaqui',
+            'email': 'tamba@example.com',
+            'password': 'tambasss',
+            'cpf': '1234567890',
+            'phone_number': '1234567890',
         },
     )
     assert response.status_code == HTTPStatus.CREATED
     assert response.json() == {
-        'username': 'alice',
-        'email': 'alice@example.com',
+        'name': 'Tambaqui',
+        'email': 'tamba@example.com',
         'id': 1,
     }
 

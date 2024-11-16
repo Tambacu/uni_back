@@ -9,7 +9,11 @@ def test_create_user():
     table_registry.metadata.create_all(engine)
     with Session(engine) as session:
         user = User(
-            name='tambas', email='tamba123@gmail.com', password='tambabao'
+            name='tambas',
+            email='tamba123@gmail.com',
+            password='tambabao',
+            cpf='032.756.635-32',
+            phone_number='+123-456-7890',
         )
         session.add(user)
         session.commit()

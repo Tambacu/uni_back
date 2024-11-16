@@ -12,7 +12,7 @@ from uni_back.database import get_session
 from uni_back.models import User
 from uni_back.schemas import TokenData
 
-SECRET_KEY = 'your-secret-key'
+SECRET_KEY = 'tambaqui123'
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = PasswordHash.recommended()
