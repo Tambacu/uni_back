@@ -54,29 +54,23 @@ def update_user(
     user_id: int,
     user: UserSchema,
     session: T_Session,
-    current_user: T_CurrentUser,
 ):
-    if current_user.id != user_id:
+    db_user = session.scalar(select(User).where(User.id == user_id))
+    if not db_user:
         raise HTTPException(
-            status_code=HTTPStatus.FORBIDDEN, detail='Not enough permissions'
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
         )
 
     try:
-        currentUser = session.scalar(select(User).where(User.id == user_id))
-        if not currentUser:
-            raise HTTPException(
-                status_code=HTTPStatus.NOT_FOUND, detail='User not found'
-            )
-
-        currentUser.name = user.name
-        currentUser.password = get_password_hash(user.password)
-        currentUser.email = user.email
-        currentUser.cpf = user.cpf
-        currentUser.phone_number = user.phone_number
+        db_user.name = user.name
+        db_user.password = get_password_hash(user.password)
+        db_user.email = user.email
+        db_user.cpf = user.cpf
+        db_user.phone_number = user.phone_number
         session.commit()
-        session.refresh(currentUser)
+        session.refresh(db_user)
 
-        return currentUser
+        return db_user
 
     except IntegrityError:
         raise HTTPException(
@@ -86,13 +80,15 @@ def update_user(
 
 
 @router.delete('/{user_id}', response_model=Message)
-def delete_user(user_id: int, session: T_Session, current_user: T_CurrentUser):
-    if current_user.id != user_id:
+def delete_user(user_id: int, session: T_Session):
+    db_user = session.scalar(select(User).where(User.id == user_id))
+
+    if not db_user:
         raise HTTPException(
-            status_code=HTTPStatus.FORBIDDEN, detail='Not enough permissions'
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
         )
 
-    session.delete(current_user)
+    session.delete(db_user)
     session.commit()
 
-    return {'message': 'User deletado'}
+    return {'message': 'User deleted'}
