@@ -34,3 +34,14 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class EventSchema(BaseModel):
+    title: str
+    image: str
+    description: str
+
+
+class EventPublic(BaseModel):
+    title: str
+    id: int
