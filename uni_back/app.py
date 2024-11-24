@@ -8,14 +8,14 @@ from uni_back.schemas import Message
 
 app = FastAPI()
 origins = [
-    "http://localhost:8081/",
-
+    "http://localhost:8081",
+    "http://192.168.18.13:8081",
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[''],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=[""],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
