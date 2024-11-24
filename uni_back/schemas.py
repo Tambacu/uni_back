@@ -47,5 +47,13 @@ class EventPublic(BaseModel):
     id: int
 
 
-class Eventlist(BaseModel):
-    events: list[EventSchema]
+class EventHome(BaseModel):
+    id: int
+    title: str
+    description: str
+    image: str
+    likes: int
+
+
+class EventList(BaseModel):
+    events: list[EventHome]
