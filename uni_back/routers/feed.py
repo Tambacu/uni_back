@@ -1,14 +1,13 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from sqlalchemy import select
+from sqlalchemy.orm import Session
 
 from uni_back.database import get_session
-from uni_back.models import User, Event
-from uni_back.schemas import EventSchema, EventPublic, EventList
+from uni_back.models import Event, User
+from uni_back.schemas import EventPublic, EventSchema, EventList
 from uni_back.security import get_current_user
-import base64
 
 router = APIRouter(prefix='/event', tags=['events'])
 Session = Annotated[Session, Depends(get_session)]
@@ -21,10 +20,16 @@ def create_event(
     session: Session,
     user: CurrentUser,
 ):
+    event_with_username = session.scalar(select(User).where(User.id == user.id))
+    if not event.image.startswith("data:image/png;base64,"):
+        event.image = f"data:image/png;base64,{event.image}"
+
     db_event = Event(
         title=event.title,
         image=event.image,
         description=event.description,
+        location=event.location,
+        date=event.date,
         user_id=user.id,
     )
 
@@ -32,17 +37,21 @@ def create_event(
     session.commit()
     session.refresh(db_event)
 
-    return db_event
+    response = {
+        "id": db_event.id,
+        "title": db_event.title,
+        'name': event_with_username.name
+    }
 
-@router.get('/home')
-def get_events_home(
-        session: Session,
-        skip: int = 0,
-        limit: int = 15
-):
+    return response
+
+
+@router.get('/home', response_model=EventList)
+def get_events_home(session: Session, skip: int = 0, limit: int = 15):
     events_array = []
     events = session.scalars(select(Event).offset(skip).limit(limit)).all()
     for event in events:
+
         events_array.append(event)
 
     return events_array

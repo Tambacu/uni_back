@@ -40,11 +40,13 @@ class EventSchema(BaseModel):
     title: str
     image: str
     description: str
-
+    location: str
+    date: str
 
 class EventPublic(BaseModel):
     title: str
     id: int
+    name: str
 
 
 class EventHome(BaseModel):

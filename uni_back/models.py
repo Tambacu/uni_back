@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import func, ForeignKey
+from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, registry
 
 table_registry = registry()
@@ -29,5 +29,7 @@ class Event:
     title: Mapped[str]
     image: Mapped[str]
     description: Mapped[str]
+    location: Mapped[str]
+    date: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     likes: Mapped[int] = mapped_column(init=False, default=0)

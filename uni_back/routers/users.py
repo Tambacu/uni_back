@@ -80,7 +80,7 @@ def update_user(
 
 
 @router.delete('/{user_id}', response_model=Message)
-def delete_user(user_id: int, session: T_Session):
+def delete_user(user_id: int, session: T_Session, current_user: T_CurrentUser):
     db_user = session.scalar(select(User).where(User.id == user_id))
 
     if not db_user:
@@ -92,3 +92,13 @@ def delete_user(user_id: int, session: T_Session):
     session.commit()
 
     return {'message': 'User deleted'}
+
+
+@router.get('/current_user', response_model=UserPublic)
+def read_current_user(session: T_Session, user: T_CurrentUser):
+    user_authenticated = session.scalar(select(User).where(User.id == user.id))
+    if not user:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
+        )
+    return user_authenticated
