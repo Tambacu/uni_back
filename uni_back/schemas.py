@@ -39,7 +39,7 @@ class TokenData(BaseModel):
 class EventSchema(BaseModel):
     title: str
     image: str
-    description: str``
+    description: str
     location: str
     date: str
 
