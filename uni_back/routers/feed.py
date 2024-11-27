@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from uni_back.database import get_session
 from uni_back.models import Event, User
-from uni_back.schemas import EventList, EventPublic, EventSchema
+from uni_back.schemas import EventPublic, EventSchema, EventHome
 from uni_back.security import get_current_user
 
 router = APIRouter(prefix='/event', tags=['events'])
@@ -48,11 +48,11 @@ def create_event(
     return response
 
 
-@router.get('/home')
+@router.get('/home', response_model=List[EventHome])
 def get_events_home(session: Session, skip: int = 0, limit: int = 15):
     events_array = []
     events = session.scalars(select(Event).offset(skip).limit(limit)).all()
-    for event in events:
-        events_array.append(event)
+    # for event in events:
+    #     events_array.append(event)
 
-    return events_array
+    return events
