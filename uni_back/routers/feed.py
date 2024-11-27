@@ -49,9 +49,9 @@ def create_event(
 
 
 @router.get('/home', response_model=List[EventHome])
-def get_events_home(session: Session, skip: int = 0, limit: int = 15):
+def get_events_home(session: Session,):
     events_array = []
-    events = session.scalars(select(Event).offset(skip).limit(limit)).all()
+    events = session.scalars(select(Event))
     # for event in events:
     #     events_array.append(event)
 
