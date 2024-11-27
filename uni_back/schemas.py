@@ -43,6 +43,7 @@ class EventSchema(BaseModel):
     location: str
     date: str
 
+
 class EventPublic(BaseModel):
     title: str
     id: int

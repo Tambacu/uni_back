@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -27,3 +28,7 @@ app.include_router(feed.router)
 @app.get('/', status_code=HTTPStatus.OK, response_model=Message)
 def root():
     return {'message': 'Hello World'}
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, port=8080, host='0.0.0.0')
