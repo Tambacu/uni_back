@@ -33,3 +33,8 @@ class Event:
     date: Mapped[str]
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
     likes: Mapped[int] = mapped_column(init=False, default=0)
+
+    # class TagsEvento (str, Enum):
+    #     educacao = 'educacao'
+    #     saude = 'saude'
+    #     doacao = 'doacao'

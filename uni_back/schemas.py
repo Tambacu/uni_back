@@ -57,5 +57,3 @@ class EventHome(BaseModel):
     image: str
     user_id: int
     likes: int
-
-

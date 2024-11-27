@@ -1,12 +1,13 @@
+from http import HTTPStatus
 from typing import Annotated, List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from uni_back.database import get_session
 from uni_back.models import Event, User
-from uni_back.schemas import EventPublic, EventSchema, EventHome
+from uni_back.schemas import EventHome, EventPublic, EventSchema, Message
 from uni_back.security import get_current_user
 
 router = APIRouter(prefix='/event', tags=['events'])
@@ -49,10 +50,28 @@ def create_event(
 
 
 @router.get('/home', response_model=List[EventHome])
-def get_events_home(session: Session,):
-    events_array = []
+def get_events_home(
+    session: Session,
+):
     events = session.scalars(select(Event))
     # for event in events:
     #     events_array.append(event)
 
     return events
+
+
+@router.delete('/home/{event_id}', response_model=Message)
+def delete_event(
+    event_id: int,
+    session: Session,
+):
+    db_event = session.scalar(select(Event).where(Event.id == event_id))
+
+    if not db_event:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
+        )
+    session.delete(db_event)
+    session.commit()
+
+    return {'message': 'Event deleted'}
