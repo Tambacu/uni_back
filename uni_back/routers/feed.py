@@ -3,7 +3,7 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from uni_back.database import get_session
 from uni_back.models import Event, User
@@ -53,11 +53,26 @@ def create_event(
 def get_events_home(
     session: Session,
 ):
-    events = session.scalars(select(Event))
+    events = session.scalars(
+        select(Event).options(joinedload(Event.user))
+    ).all()
     # for event in events:
     #     events_array.append(event)
 
-    return events
+    return [
+        EventHome(
+            id=event.id,
+            title=event.title,
+            description=event.description,
+            image=event.image,
+            user_id=event.user_id,
+            likes=event.likes,
+            name_user=event.user.name,
+            date=event.date,
+            location=event.location,
+        )
+        for event in events
+    ]
 
 
 @router.delete('/home/{event_id}', response_model=Message)
